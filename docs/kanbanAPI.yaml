@@ -1,0 +1,450 @@
+openapi: 3.0.0
+
+info:
+  title: Kunban App API on Lists and Tasks
+  description: >
+    <p>There are two APIs within this application one is for List and another is for Task.</p>
+    <h3>Error Code for List API</h3>
+    <table>
+    <tr>
+    <th>Error Code</th>
+    <th>Error Message</th>
+    </tr>
+    <tr>
+    <td>LIST001</td>
+    <td>Name is required</td>
+    </tr>
+    <tr>
+    <td>LIST002</td>
+    <td>User is required</td>
+    </tr>
+    <tr>
+    <td>LIST003</td>
+    <td>User does not exist</td>
+    </tr>
+    </table>
+    <h3>Error Code for Task API</h3>
+    <table>
+    <tr>
+    <th>Error Code</th>
+    <th>Error Message</th>
+    </tr>
+    <tr>
+    <td>TASK001</td>
+    <td>Title is required</td>
+    </tr>
+    <tr>
+    <td>TASK002</td>
+    <td>Deadline is required</td>
+    </tr>
+    <tr>
+    <td>TASK003</td>
+    <td>Done is required</td>
+    </tr>
+    <tr>
+    <td>TASK004</td>
+    <td>List is required</td>
+    </tr>
+    <tr>
+    <td>TASK005</td>
+    <td>List does not exist</td>
+    </tr>
+    </table>
+
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /api/list/{list_id}:
+    description: End point to read, update and delete a list resource with list_id = listId.
+    get:
+      description: Operation to Read list resource.
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 201
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: list object
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 201
+                  name:
+                    type: string
+                    example: To Do
+                  description:
+                    type: string
+                    example: List of task to do
+                  user:
+                    type: integer
+                    example: 101
+        '500':
+          description: Internal Server Error
+        '404':
+          description: List not found
+
+    put:
+      description: Operation to update the list resource.
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 201
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: To Do
+                description:
+                  type: string
+                  example: List of task to do
+                user:
+                  type: integer
+                  example: 101
+      responses:
+        '200':
+          description: Successfuly updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 201
+                  name:
+                    type: string
+                    example: To Do
+                  description:
+                    type: string
+                    example: List of task to do
+                  user:
+                    type: integer
+                    example: 101
+        '404':
+          description: List not found
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      description: Operation to delete the list resource
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 201
+      responses:
+        '200':
+          description: Successfully Deleted
+        '404':
+          description: List not found
+        '500':
+          description: Intenal Server Error
+
+  /api/list:
+    description: End point to create list resource
+    post:
+      description: Operation to create the list resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: To Do
+                description:
+                  type: string
+                  example: List of task to do
+                user:
+                  type: integer
+                  example: 101
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 201
+                  name:
+                    type: string
+                    example: To Do
+                  description:
+                    type: string
+                    example: List of task to do
+                  user:
+                    type: integer
+                    example: 101
+        '409':
+          description: list_id already exist
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+  /api/task/{task_id}:
+    description: Url to read, update and delete the student resource.
+    get:
+      description: Operation to read task resource
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+            example: 201
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: task object
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 101
+                  title:
+                    type: string
+                    example: Do Assignment
+                  content:
+                    type: string
+                    example: Complete the assignment ASAP
+                  deadline:
+                    type: string
+                    example: 2022-09-16
+                  creation:
+                    type: string
+                    example: 2022-09-15
+                  done:
+                    type: integer
+                    example: 1
+                  list:
+                    type: integer
+                    example: 201
+                  modified:
+                    type: string
+                    example: 2022-09-16
+                  completedOn:
+                    type: string
+                    example: 2022-09-16
+                  
+        '500':
+          description: Internal server error
+        '404':
+          description: Task not found
+
+    put:
+      description: Operation to update the task resource
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Do Assignment
+                content:
+                  type: string
+                  example: Complete the assignment ASAP
+                deadline:
+                  type: string
+                  example: 2022-09-16
+                done:
+                  type: integer
+                  example: 1
+                list:
+                  type: integer
+                  example: 201
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 101
+                  title:
+                    type: string
+                    example: Do Assignment
+                  content:
+                    type: string
+                    example: Complete the assignment ASAP
+                  deadline:
+                    type: string
+                    example: 2022-09-16
+                  creation:
+                    type: string
+                    example: 2022-09-15
+                  done:
+                    type: integer
+                    example: 1
+                  list:
+                    type: integer
+                    example: 201
+                  modified:
+                    type: string
+                    example: 2022-09-16
+                  completedOn:
+                    type: string
+                    example: 2022-09-16
+        '404':
+          description: Task not found
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      description: Operation to delete the course resource
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        '200':
+          description: Successfully Deleted
+        '500':
+          description: Internal Server Error
+        '404':
+          description: Task not found
+
+  /api/task:
+    description: Url to create task resource
+    post:
+      description: Operation to create the task resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Do Assignment
+                content:
+                  type: string
+                  example: Complete the assignment ASAP
+                deadline:
+                  type: string
+                  example: 2022-09-16
+                done:
+                  type: integer
+                  example: 1
+                list:
+                  type: integer
+                  example: 201
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 101
+                  title:
+                    type: string
+                    example: Do Assignment
+                  content:
+                    type: string
+                    example: Complete the assignment ASAP
+                  deadline:
+                    type: string
+                    example: 2022-09-16
+                  creation:
+                    type: string
+                    example: 2022-09-15
+                  done:
+                    type: integer
+                    example: 1
+                  list:
+                    type: integer
+                    example: 201
+                  modified:
+                    type: string
+                    example: "null"
+                  completedOn:
+                    type: string
+                    example: 2022-09-16
+        '409':
+          description: List already exist
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
